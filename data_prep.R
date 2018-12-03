@@ -2,6 +2,7 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(MASS)
 
 setwd("~/Desktop/INFO370FINAL")
 #original_df<- read_csv("~/Desktop/info_370_final/facebook-fact-check.csv")
@@ -41,6 +42,7 @@ for(i in 1:nrow(df)){
 }
 
 df_numeric=cbind(df_numeric,reaction_numeric)
+df_numeric=na.omit(df_numeric)
 ############################done with df
 
 df_numeric %>% group_by(reaction_numeric) %>% summarize(n())
@@ -76,3 +78,32 @@ grid.arrange(p1,p2,p3,p4,nrow=2)
 library(ggcorrplot)
 cormat<-round(cor(df_numeric),2)
 ggcorrplot(cormat)
+
+########experiment with ols
+
+df_numeric$reaction_numeric=as.factor(df_numeric$reaction_numeric)
+
+null=polr(reaction_numeric~1,data=df_numeric)
+full=polr(reaction_numeric~., data=df_numeric)
+
+#could use backward/forward
+step(full, data=df_numeric, direction="backward")
+
+#best model based on AIC =3280
+best_model=polr(formula = reaction_numeric ~ share_count + num_reactions + 
+       num_comments + num_shares + num_loves + num_likes, data = df_numeric)
+library(glm.predict)
+
+#get predictions
+polr.predict(best_model)
+y_pred=predict(best_model,data=df_numeric)
+
+accur=0
+for(i in 1:length(y_pred)){
+  if(df_numeric$reaction_numeric[i]==y_pred[i]){
+    accur=accur+1
+  }
+}
+accur/length(y_pred) #0.75
+
+
