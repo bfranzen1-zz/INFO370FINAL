@@ -11,34 +11,22 @@ from sklearn.feature_selection import SelectFromModel
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
 import seaborn as sns
-from sklearn.model_selection import train_test_split 
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
-
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
-
 from sklearn.metrics import make_scorer
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestRegressor
-
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_regression
-from sklearn.feature_selection import mutual_info_regression
-from sklearn.neighbors import KNeighborsRegressor    # regressor
-from sklearn.model_selection import GridSearchCV     # for grid search
-from sklearn.pipeline import make_pipeline   
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import ExtraTreesClassifier
 
 
-def feature_selection(data,target,original):
+def feature_selection(data,target,original, num):
     X1,y1=data,target
     
     clf1=ExtraTreesClassifier(n_estimators=50) #can change
@@ -54,7 +42,7 @@ def feature_selection(data,target,original):
         result.append(temp[index[i]])
 
     df = pd.DataFrame({'r':result, 'index':index})
-    df1 = df.loc[df['index']<5] #select based on how many variables you want
+    df1 = df.loc[df['index']<num] #select based on how many variables you want
     final_list=list(df1['r'])
     print(final_list)
     df_selected=original[final_list] #this is the features
@@ -87,20 +75,9 @@ def model_selection_random_forest(df_dropped,df_target,train_features,train_outc
         plt.plot(range(1,dim), log2_results, label="log2")
         plt.legend()
         
-def get_MAE(best_model,train_features,test_features,train_outcome,test_outcome):
-    
-    best_model.fit(train_features,train_outcome)
-    pred=best_model.predict(test_features)
-    score=mean_absolute_error(test_outcome,pred)
-    
-    return score
 
 def cross_val(train_features,train_outcome,best_model):
-    
-    #decision_tree_reg = DecisionTreeRegressor(random_state=11)
     folds=KFold(n_splits=10,shuffle=True)
-    #print(np.mean(cross_val_score(best_model, train_features, train_outcome, cv = folds)))
-
     mean=np.mean(cross_val_score(best_model, train_features, train_outcome, cv = folds))
     return mean
 
