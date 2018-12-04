@@ -38,7 +38,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import ExtraTreesClassifier
 
 
-def feature_selection(data,target,original):
+def feature_selection(data,target,original, num):
     X1,y1=data,target
     
     clf1=ExtraTreesClassifier(n_estimators=50) #can change
@@ -54,7 +54,7 @@ def feature_selection(data,target,original):
         result.append(temp[index[i]])
 
     df = pd.DataFrame({'r':result, 'index':index})
-    df1 = df.loc[df['index']<5] #select based on how many variables you want
+    df1 = df.loc[df['index']<num] #select based on how many variables you want
     final_list=list(df1['r'])
     print(final_list)
     df_selected=original[final_list] #this is the features
