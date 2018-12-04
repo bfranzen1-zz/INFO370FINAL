@@ -128,7 +128,7 @@ best_model2<-polr(formula = Rating ~ comment_count + num_reactions + num_comment
                     num_likes + num_loves + num_hahas + num_sads + num_angrys + 
                     Category_left + Category_mainstream + `Page_ABC News Politics` + 
                     `Page_CNN Politics` + `Page_Eagle Rising` + `Date_Published_2016-09-23` + 
-                    Post_Type_link + Post_Type_photo, data = model_data,Hess = TRUE)
+                    Post_Type_link + Post_Type_photo, data = model_data)
 
 y_pred2=predict(best_model2,data=model_data)
 accur2=0
