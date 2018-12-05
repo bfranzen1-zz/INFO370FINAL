@@ -138,3 +138,15 @@ for(i in 1:length(y_pred2)){
   }
 }
 accur2/length(y_pred2) #0.781
+
+#pie chart
+df_pie<-data.frame(
+  group=c("mostly false","no factual content","mixture of true and false","mostly true"),
+  value=c(78,257,219,1612)
+)
+library(ggplot2)
+bp<- ggplot(df_pie, aes(x="", y=value, fill=group))+
+  geom_bar(width = 1, stat = "identity") + ggtitle("Pie Chart of Rating Types")
+pie <- bp + coord_polar("y", start=0)
+pie + scale_fill_brewer(palette="Blues")+
+  theme_minimal()
